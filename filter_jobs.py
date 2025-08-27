@@ -20,7 +20,6 @@ def filter_jobs(string):
                     "url": url
                 }
 
-
                 )
     print(jobs)
     return jobs
