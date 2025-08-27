@@ -1,5 +1,5 @@
 import discord 
-from filter_jobs import filter_jobs
+from parse_jobs import parse_jobs
 
 def create_embed_msg(job):
     embed = discord.Embed(
