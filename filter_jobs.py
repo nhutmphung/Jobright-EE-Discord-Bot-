@@ -8,21 +8,38 @@ def filter_jobs(string):
     lines = string.split("\n")
 
     for line in lines:
-        if line.startswith("| ** "):  # example: each job starts with '|"
-            #uses regex to capture the position, company, location, url
-            match = re.match(r"- \*\*(.*?)\*\* at (.*?) \((.*?)\) - \[.*?\]\((.*?)\)", line)
+        # Only process lines that look like table rows
+        if line.startswith("| **["):
+            # Regex explanation:
+            # \|\s\*\*\[(.*?)\]\((.*?)\)\*\*  => matches first cell: company name + link
+            # \|\s\*\*\[(.*?)\]\((.*?)\)\*\*  => matches second cell: position + link
+            # \|\s(.*?)\s\|  => matches third cell: location
+            match = re.match(
+                r"\|\s\*\*\[(.*?)\]\((.*?)\)\*\*\s\|\s\*\*\[(.*?)\]\((.*?)\)\*\*\s\|\s(.*?)\s\|",
+                line
+            )
             if match:
-                title, company, location, url = match.groups()
-                jobs.append ({
-                    "title": title,
-                    "company": company, 
+                company_name, company_url, position, position_url, location = match.groups()
+                jobs.append(
+                    {
+                    "title": position,
+                    "company": company_name,
                     "location": location,
-                    "url": url
+                    "url": position_url  # usually the position link is what we want to apply to
                 }
-
                 )
-    print(jobs)
+
     return jobs
+
+def main():
+    raw_data = fetch_jobs()
+    jobs = filter_jobs(raw_data)
+
+    for job in (jobs[:2]):
+        print(f"{job['title']} at {job['company']} ({job['location']}): {job['url']}")
+
+
+main()
 
 # def filter_jobs(jobs, remote_only=False):
 #     """
