@@ -1,4 +1,4 @@
-from parse_jobs import parse_jobs
+
 from fetch_jobs import fetch_jobs
 import re
 
