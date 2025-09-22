@@ -1,6 +1,9 @@
-
+import hashlib
 from fetch_jobs import fetch_jobs
 import re
+
+#data setup
+raw_data = fetch_jobs()
 
 
 #takes the mark down text as a string and parses the text
@@ -32,15 +35,19 @@ def parse_jobs(string):
 
     return jobs
 
+def job_id(job):
+    url_bytes = job['url'].encode('utf-8')
+    job_id = hashlib.sha256(url_bytes).hexdigest()
+    print(job_id)
+
+    return job_id
+
 def main():
-    raw_data = fetch_jobs()
-    jobs = parse_jobs(raw_data)
-
-    for job in (jobs[:2]):
-        print(f"{job['title']} at {job['company']} ({job['location']}): {job['url']}")
+    job = {"url": "https://example.com/job1"}
+    job_hash = job_id(job)
+    print(job_hash)
 
 
-main()
 
 # def filter_jobs(jobs, remote_only=False):
 #     """

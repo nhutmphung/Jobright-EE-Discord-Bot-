@@ -1,4 +1,5 @@
 import discord 
+import hashlib
 from parse_jobs import parse_jobs
 
 def createEmbedMsg(job):

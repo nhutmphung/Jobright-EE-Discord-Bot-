@@ -1,6 +1,6 @@
 #import the raw data from github and make it legible/readable 
-
 import requests
+
 
 def fetch_jobs():
     url = "https://raw.githubusercontent.com/jobright-ai/2025-Engineer-Internship/refs/heads/master/README.md"
