@@ -1,10 +1,12 @@
 import hashlib
 from fetch_jobs import fetch_jobs
 import re
+import json
 
 #data setup
 raw_data = fetch_jobs()
 
+filename = "posted_jobs.json"
 
 #takes the mark down text as a string and parses the text
 def parse_jobs(string):
@@ -35,17 +37,35 @@ def parse_jobs(string):
 
     return jobs
 
-def job_id(job):
-    url_bytes = job['url'].encode('utf-8')
+def job_id(string):
+    url_bytes = string['url'].encode('utf-8')
     job_id = hashlib.sha256(url_bytes).hexdigest()
-    print(job_id)
-
     return job_id
 
+def posted_jobs(string):
+    try:
+        with open(filename, "r") as file:
+            data = json.load(file)
+    except(FileNotFoundError, json.JSONDecodeError):
+        data = [ ]
+
+    if string in data:
+        return string
+    else:
+        data.append(string)
+
+        with open("posted_jobs.json", "w") as file:
+            json.dump(data, file, indent = 4)
+            
+
 def main():
-    job = {"url": "https://example.com/job1"}
+    job = {"url": "https://jobright.ai/jobs/info/68cfdc3fdbd9fb154edeb617?utm_source=1099&utm_campaign=Software%20Engineer"}
     job_hash = job_id(job)
-    print(job_hash)
+
+    posted_jobs(job_hash)
+
+main()
+
 
 
 

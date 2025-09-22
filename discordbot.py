@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands, tasks
-from parse_jobs import parse_jobs
-from parse_jobs import job_id
+
+import parse_jobs
+
 from fetch_jobs import fetch_jobs
 from discord_embed import createEmbedMsg
 import logging
@@ -25,7 +26,7 @@ bot = commands.Bot(command_prefix = '!', intents = intents)
 raw_data = fetch_jobs()
 
 #process raw data into dicts
-jobs = parse_jobs(raw_data)
+jobs = parse_jobs.parse_jobs(raw_data)
 
 filename = "posted_jobs.json"
 
@@ -34,28 +35,20 @@ filename = "posted_jobs.json"
 @bot.event
 async def on_ready():
     print(f"We are ready to go in, {bot.user.name}")
-    sendHello.start()
+    sendJob.start()
 
 @tasks.loop(seconds = 20)
-async def sendHello():
+async def sendJob():
     channelID = 1404228130633158676
     channel = bot.get_channel(channelID)
 
     if channel:
-        raw_data = fetch_jobs()
-        jobs = parse_jobs(raw_data)
 
-    with open(filename, "r") as file:
-            data = json.load(file)
-            if job_id in data:
-                return job_id
-            else:
-                for job in jobs:
-                    data.append(job_id)
-                    with open(filename, "w") as file:
-                        json.dump(data, file)
-                    await channel.send(embed=createEmbedMsg(job))
-    
+        for job in jobs:
+            hashed_jobs = parse_jobs.job_id(job)
+            parse_jobs.posted_jobs(hashed_jobs)
+            await channel.send(embed=createEmbedMsg(job))
+
         
         # This will send a message for *every* job listing
 bot.run(token)
