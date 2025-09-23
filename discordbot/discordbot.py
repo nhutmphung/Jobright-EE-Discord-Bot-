@@ -31,6 +31,7 @@ jobs = parse_jobs.parse_jobs(raw_data)
 filename = "posted_jobs.json"
 
 
+
 #turns on the bot 
 @bot.event
 async def on_ready():

@@ -37,11 +37,28 @@ def parse_jobs(string):
 
     return jobs
 
+
+#*TODO: to filter the job, take from the title and look for "ELECTRICAL" in the job title and pull any jobsfrom it
+
+#take in the dict list from parse_jobs, and take the dict and filter out for the TITLE 
+def filter_jobs(jobs):
+    for i in jobs:
+        if "Electrical" in i['title']:
+            filteredURL = i['url']
+            print("Job position: ", i['title'], "| URL: ", i['url'])
+            return filteredURL
+        else:
+            next
+            #print("No Electrical Job positions right now!") 
+
+#create unique id from the filtered EE jobs
 def job_id(string):
-    url_bytes = string['url'].encode('utf-8')
+    url_bytes = string.encode('utf-8')
     job_id = hashlib.sha256(url_bytes).hexdigest()
     return job_id
 
+
+#sends job_id posted to the json file
 def posted_jobs(string):
     try:
         with open(filename, "r") as file:
@@ -56,23 +73,15 @@ def posted_jobs(string):
 
         with open("posted_jobs.json", "w") as file:
             json.dump(data, file, indent = 4)
+
+
             
-
 def main():
-    job = {"url": "https://jobright.ai/jobs/info/68cfdc3fdbd9fb154edeb617?utm_source=1099&utm_campaign=Software%20Engineer"}
-    job_hash = job_id(job)
+    job = parse_jobs(raw_data)
+    filteredJob = filter_jobs(job)
+    testID = job_id(filteredJob)
+    posted_jobs(testID)
 
-    posted_jobs(job_hash)
+    print("job-id:", testID)
 
 main()
-
-
-
-
-# def filter_jobs(jobs, remote_only=False):
-#     """
-#     Optionally filter jobs (e.g., only remote positions).
-#     """
-#     if remote_only:
-#         return [job for job in jobs if job["location"].lower() == "remote"]
-#     return jobs
