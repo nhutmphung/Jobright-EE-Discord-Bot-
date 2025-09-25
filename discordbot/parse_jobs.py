@@ -2,6 +2,7 @@ import hashlib
 from fetch_jobs import fetch_jobs
 import re
 import json
+import pprint
 
 #data setup
 raw_data = fetch_jobs()
@@ -43,12 +44,13 @@ def parse_jobs(string):
 #take in the dict list from parse_jobs, and take the dict and filter out for the TITLE 
 def filter_jobs(jobs):
     for i in jobs:
-        if "Electrical" in i['title']:
+        filtered = []
+        if "Electrical" in i['title'] or "Mechatronic" in i['title'] or "Power" in i['title']:
             filteredURL = i['url']
             print("Job position: ", i['title'], "| URL: ", i['url'])
-            return filteredURL
-        #if nothing matched
-        return None
+            filtered.append(i['url'])
+        else: 
+            print("No EE job right now")
 
 #create unique id from the filtered EE jobs
 def job_id(string):
@@ -74,17 +76,13 @@ def posted_jobs(string):
             json.dump(data, file, indent = 4)
 
 
-            
+#testing to see if electrical position gets printed             
 def main():
     job = parse_jobs(raw_data)
-    filteredJob = filter_jobs(job)
+    job = job[:20]
+    pprint.pprint(job[:20])
+    filter_jobs(job)
+   # filteredJob = filter_jobs(job)
 
-    if filteredJob is not None:
-        testID = job_id(filteredJob)
-        posted_jobs(testID)
-        print("job-id:", testID)
-    
-    else:
-        print("No EE jobs right now!")
 
 main()
