@@ -7,7 +7,8 @@ import pprint
 #data setup
 raw_data = fetch_jobs()
 
-filename = "posted_jobs.json"
+postedFileName = "posted_jobs.json"
+filteredFileName = "filteredJob.json"
 
 #takes the mark down text as a string and parses the text
 def parse_jobs(string):
@@ -39,7 +40,7 @@ def parse_jobs(string):
     return jobs
 
 
-#*TODO: to filter the job, take from the title and look for "ELECTRICAL" in the job title and pull any jobsfrom it
+#*TODO: take the filtered jobs and post it into a array/list to pull from and have the posted_jobs function pull from that 
 
 #take in the dict list from parse_jobs, and take the dict and filter out for the TITLE 
 def filter_jobs(jobs):
@@ -62,7 +63,7 @@ def job_id(string):
 #sends job_id posted to the json file
 def posted_jobs(string):
     try:
-        with open(filename, "r") as file:
+        with open(postedFileName, "r") as file:
             data = json.load(file)
     except(FileNotFoundError, json.JSONDecodeError):
         data = [ ]

@@ -28,7 +28,7 @@ raw_data = fetch_jobs()
 #process raw data into dicts
 jobs = parse_jobs.parse_jobs(raw_data)
 
-filename = "posted_jobs.json"
+#filename = "posted_jobs.json"
 
 
 
