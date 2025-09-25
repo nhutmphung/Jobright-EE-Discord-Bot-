@@ -47,9 +47,8 @@ def filter_jobs(jobs):
             filteredURL = i['url']
             print("Job position: ", i['title'], "| URL: ", i['url'])
             return filteredURL
-        else:
-            next
-            #print("No Electrical Job positions right now!") 
+        #if nothing matched
+        return None
 
 #create unique id from the filtered EE jobs
 def job_id(string):
@@ -79,9 +78,13 @@ def posted_jobs(string):
 def main():
     job = parse_jobs(raw_data)
     filteredJob = filter_jobs(job)
-    testID = job_id(filteredJob)
-    posted_jobs(testID)
 
-    print("job-id:", testID)
+    if filteredJob is not None:
+        testID = job_id(filteredJob)
+        posted_jobs(testID)
+        print("job-id:", testID)
+    
+    else:
+        print("No EE jobs right now!")
 
 main()
