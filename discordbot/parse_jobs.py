@@ -49,7 +49,8 @@ def filter_jobs(jobs):
         if "Electrical" in i['title'] or "Mechatronic" in i['title'] or "Power" in i['title']:
             filteredURL = i['url']
             print("Job position: ", i['title'], "| URL: ", i['url'])
-            filtered.append(i['url'])
+            URL = filtered.append(i['url'])
+            return URL
         else: 
             print("No EE job right now")
 
@@ -58,6 +59,22 @@ def job_id(string):
     url_bytes = string.encode('utf-8')
     job_id = hashlib.sha256(url_bytes).hexdigest()
     return job_id
+
+#sends the filtered URL to the function to append in the list of filteredJob. After, have the job_id function pull from the list?
+def filteredJobsJSON(string):
+    try:
+        with open(filteredFileName, "r") as file:
+            data = json.load(file)
+
+    except(FileNotFoundError, json.JSONDecodeError):
+        data = []
+
+    if string in data:
+        return string
+    else:
+        data.append(string)
+        with open("filteredJob.json", "w") as file:
+            json.dump(data, file, indent = 4 )
 
 
 #sends job_id posted to the json file
@@ -80,9 +97,10 @@ def posted_jobs(string):
 #testing to see if electrical position gets printed             
 def main():
     job = parse_jobs(raw_data)
-    job = job[:20]
-    pprint.pprint(job[:20])
-    filter_jobs(job)
+    pprint.pprint(job[:5])
+    filter_jobs(job[:100])
+    filteredURL = filter_jobs(job[:100])
+    filteredJobsJSON(filteredURL)
    # filteredJob = filter_jobs(job)
 
 
