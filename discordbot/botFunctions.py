@@ -40,8 +40,6 @@ def parse_jobs(string):
     return jobs
 
 
-#*TODO: take the filtered jobs and post it into a array/list to pull from and have the posted_jobs function pull from that 
-
 #take in the dict list from parse_jobs, and take the dict and filter out for the TITLE 
 def filter_jobs(jobs):
     filtered = []
@@ -78,6 +76,22 @@ def filteredJobsJSON(string):
         with open("filteredJob.json", "w") as file:
             json.dump(data, file, indent = 4 )
 
+def filteredJob_ids():
+    try:
+        with open(filteredFileName, "r") as file:
+            data = json.load(file)   # list of job URLs
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = []
+
+    job_ids = {}
+    for url in data:
+        url_bytes = url.encode("utf-8")
+        job_id = hashlib.sha256(url_bytes).hexdigest()
+        job_ids[url] = job_id   # map each URL to its hash
+
+    return job_ids
+
+
 
 #sends job_id posted to the json file
 def posted_jobs(string):
@@ -96,6 +110,7 @@ def posted_jobs(string):
             json.dump(data, file, indent = 4)
 
 
+#TODO fix the filteredJob_ids to make it properly make the ids, was too tired to finish zzzz
 #testing to see if electrical position gets printed             
 def main():
     job = parse_jobs(raw_data)
@@ -103,6 +118,7 @@ def main():
     filter_jobs(job[:100])
     filteredURL = filter_jobs(job[:100])
     filteredJobsJSON(filteredURL)
+    filteredJob_ids(filteredURL)
    # filteredJob = filter_jobs(job)
 
 

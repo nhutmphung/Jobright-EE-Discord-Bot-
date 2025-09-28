@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 
-import parse_jobs
+import botFunctions
 
 from fetch_jobs import fetch_jobs
 from discord_embed import createEmbedMsg
@@ -26,7 +26,7 @@ bot = commands.Bot(command_prefix = '!', intents = intents)
 raw_data = fetch_jobs()
 
 #process raw data into dicts
-jobs = parse_jobs.parse_jobs(raw_data)
+jobs = botFunctions.parse_jobs(raw_data)
 
 #filename = "posted_jobs.json"
 
@@ -46,8 +46,8 @@ async def sendJob():
     if channel:
 
         for job in jobs:
-            hashed_jobs = parse_jobs.job_id(job)
-            parse_jobs.posted_jobs(hashed_jobs)
+            hashed_jobs = botFunctions.job_id(job)
+            botFunctions.posted_jobs(hashed_jobs)
             await channel.send(embed=createEmbedMsg(job))
 
         
