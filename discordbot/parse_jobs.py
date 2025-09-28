@@ -44,15 +44,17 @@ def parse_jobs(string):
 
 #take in the dict list from parse_jobs, and take the dict and filter out for the TITLE 
 def filter_jobs(jobs):
+    filtered = []
     for i in jobs:
-        filtered = []
         if "Electrical" in i['title'] or "Mechatronic" in i['title'] or "Power" in i['title']:
             filteredURL = i['url']
             print("Job position: ", i['title'], "| URL: ", i['url'])
-            URL = filtered.append(i['url'])
-            return URL
+            filtered.append(i['url'])
         else: 
             print("No EE job right now")
+
+    
+    return filtered
 
 #create unique id from the filtered EE jobs
 def job_id(string):
@@ -68,7 +70,7 @@ def filteredJobsJSON(string):
 
     except(FileNotFoundError, json.JSONDecodeError):
         data = []
-
+    #if the string is already in there, just return and do nothing 
     if string in data:
         return string
     else:
@@ -97,7 +99,7 @@ def posted_jobs(string):
 #testing to see if electrical position gets printed             
 def main():
     job = parse_jobs(raw_data)
-    pprint.pprint(job[:5])
+    #pprint.pprint(job[:5])
     filter_jobs(job[:100])
     filteredURL = filter_jobs(job[:100])
     filteredJobsJSON(filteredURL)
