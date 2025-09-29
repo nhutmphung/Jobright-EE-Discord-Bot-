@@ -46,11 +46,8 @@ def filter_jobs(jobs):
     for i in jobs:
         if "Electrical" in i['title'] or "Mechatronic" in i['title'] or "Power" in i['title']:
             filteredURL = i['url']
-            print("Job position: ", i['title'], "| URL: ", i['url'])
+            print( "URL: ", i['url'])
             filtered.append(i['url'])
-        else: 
-            print("No EE job right now")
-
     
     return filtered
 
@@ -76,20 +73,28 @@ def filteredJobsJSON(string):
         with open("filteredJob.json", "w") as file:
             json.dump(data, file, indent = 4 )
 
-def filteredJob_ids():
+def filteredJob_ids(_):
     try:
         with open(filteredFileName, "r") as file:
             data = json.load(file)   # list of job URLs
     except (FileNotFoundError, json.JSONDecodeError):
         data = []
 
-    job_ids = {}
+    try:
+        with open(postedFileName, "r") as file2: 
+            data2 = json.load(file2)   # list of job IDs
+    except (FileNotFoundError, json.JSONDecodeError):
+        data2 = []
+
     for url in data:
         url_bytes = url.encode("utf-8")
         job_id = hashlib.sha256(url_bytes).hexdigest()
-        job_ids[url] = job_id   # map each URL to its hash
+        if job_id not in data2:   # avoid duplicates
+            data2.append(job_id)
 
-    return job_ids
+    # write once after loop
+    with open(postedFileName, "w") as file2:
+        json.dump(data2, file2, indent=4)
 
 
 
@@ -115,9 +120,11 @@ def posted_jobs(string):
 def main():
     job = parse_jobs(raw_data)
     #pprint.pprint(job[:5])
-    filter_jobs(job[:100])
-    filteredURL = filter_jobs(job[:100])
-    filteredJobsJSON(filteredURL)
+    filter_jobs(job[:500])
+    filteredURL = filter_jobs(job[:500])
+
+    for url in filteredURL:
+        filteredJobsJSON(url)
     filteredJob_ids(filteredURL)
    # filteredJob = filter_jobs(job)
 
